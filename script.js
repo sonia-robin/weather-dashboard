@@ -166,11 +166,34 @@ function fetchCoord(cityInput) {
     }); 
 }
 
+
+
 // add event listener to search button
 var searchBtn = document.getElementById("search-button");
 searchBtn.addEventListener("click", function(e){
-    e.preventDefault();
     var cityInput = document.getElementById("search-input").value.trim();
-    fetchCoord(cityInput);
+    e.preventDefault();
+    console.log(cityInput);
+    // fetchCoord(cityInput);
+    saveToStorage(cityInput);
+    renderSearch();
 })
 
+
+// function save to local storage
+function saveToStorage (cityInputValue) {
+    // var cityInput = document.getElementById("search-input").value.trim();
+    localStorage.setItem("searchInput", cityInputValue);
+}
+
+// function render search input values
+function renderSearch () {
+    var savedCitySearch = localStorage.getItem("searchInput");
+    console.log(savedCitySearch);
+    var history = document.getElementById("history");
+    var historyButton = document.createElement("button");
+    historyButton.setAttribute("type", "button");
+    historyButton.setAttribute("class", "btn btn-primary history-btn");
+    historyButton.innerHTML = savedCitySearch;
+    history.prepend(historyButton);
+}
