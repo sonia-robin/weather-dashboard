@@ -23,5 +23,8 @@ margin-top: 10px;
     border: 1px solid black;
 } */
   
-  
-  
+.history-btn {
+    background-color: grey !important;
+    border: none !important;
+}  
+
