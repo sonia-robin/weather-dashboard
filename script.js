@@ -29,6 +29,8 @@ fetch (apiCall)
     var iconUrl =  "https://openweathermap.org/img/wn/" + iconId + ".png"
     
     // display city, date, icon in today section
+    document.getElementById("today").style.border = "1px solid black";
+    document.getElementById("today").style.padding = "10px";
     var headerToday = document.createElement("h2");
     var iconImg = document.createElement("img");
     iconImg.setAttribute("src", iconUrl);
