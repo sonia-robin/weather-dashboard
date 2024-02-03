@@ -1,0 +1,27 @@
+.input-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+.input-group input.weather-search {
+width: 100%;
+box-sizing: border-box; /* Ensure width includes padding and border */
+margin: 0; /* Reset margin to ensure it spans the whole width */
+border-radius: 5px !important;
+}
+
+.btn {
+width: 100%;
+margin-top: 10px;
+}
+
+.hr {
+margin-top: 10px;
+}
+  
+/* #today {
+    border: 1px solid black;
+} */
+  
+  
+  
