@@ -3,7 +3,7 @@ var lat = 51.5073219;
 var lon = -0.1276474;
 
 // function to fetch and display current forecast data
-function fetchForecastToday (coordUrlSection){
+function fetchWeatherForecast (coordUrlSection){
 
 var apiCall = "http://api.openweathermap.org/data/2.5/forecast?" + coordUrlSection + "&appid=" + apiKey;
 var currentDate = dayjs().format("DD/MM/YYYY");
@@ -58,88 +58,58 @@ fetch (apiCall)
     humidityEl.textContent = `Humidity: ${humidity}%`;
     todaySection.appendChild(humidityEl);
 
-    // console logs
-    // console.log(data);
-    // console.log(cityName);
-    // console.log(date);
-    // console.log(iconId);
-    // console.log(iconUrl);
-    // console.log(headerToday);
-    // console.log(temp);
-    // console.log(wind);
-    // console.log(humidity);
-
-    // for (var i = 0; i < data.list.length; i++){
-    //     var dateHour = data.list[i].dt_txt;
-    //     var midday = dateHour.includes("12");
-    //     if (midday){
-    //         console.log(dateHour);
-    //     }
-    // }
+    var forecastSection = document.getElementById("forecast");
+    // empty today section first
+    forecastSection.innerHTML = "";
+    for (var i = 0; i < data.list.length; i++){
+        var dateHour = data.list[i].dt_txt;
+        var midday = dateHour.includes("12");
+        // retrieving weather icon ID + build icon URL
+        var iconId = data.list[i].weather[0].icon;
+        var iconUrl =  "https://openweathermap.org/img/wn/" + iconId + ".png"
+        if (midday){
+            var year = dateHour.slice(0,4);
+            var month = dateHour.slice(5,7);
+            var day = dateHour.slice(8,10);
+            var dateObj = new Date(year, month, day);
+            var date = dayjs(dateObj).format("DD/MM/YYYY");
+            var colDiv = document.createElement("div");
+            colDiv.setAttribute("class", "col");
+            forecastSection.appendChild(colDiv);
+            var cardDiv = document.createElement("div");
+            cardDiv.setAttribute("class", "card bootsrap-card");
+            colDiv.appendChild(cardDiv);
+            var cardBody = document.createElement("div");
+            cardBody.setAttribute("class", "card-body");
+            cardDiv.append(cardBody);
+            var cardTitle = document.createElement("h6");
+            cardTitle.setAttribute("class", "card-title");
+            cardTitle.textContent = date;
+            cardBody.appendChild(cardTitle);
+            var iconImg = document.createElement("img");
+            iconImg.setAttribute("src", iconUrl);
+            iconImg.setAttribute("alt", "weather-icon");
+            cardBody.appendChild(iconImg)
+            var temp = (data.list[i].main.temp - 273.15).toFixed(2);
+            var tempEl = document.createElement("p");
+            tempEl.textContent = `Temp: ${temp}°C`;
+            cardBody.appendChild(tempEl);
+            var wind = data.list[i].wind.speed;
+            var windEl = document.createElement("p");
+            windEl.textContent = `Wind: ${wind} KPH`;
+            cardBody.appendChild(windEl);
+            var humidity = data.list[i].main.humidity;
+            var humidityEl = document.createElement("p");
+            humidityEl.textContent = `Humidity: ${humidity}%`;
+            cardBody.appendChild(humidityEl);
+        }
+    }
   
 });
 }
-// function to display 5 day forecast
-function fetchForecastFiveDays (coordUrlSection){
-    var apiCall = "http://api.openweathermap.org/data/2.5/forecast?" + coordUrlSection + "&appid=" + apiKey;
-    fetch (apiCall)
-    .then(function (response){
-        return response.json();
-    })
-    .then(function (data){
-        var forecastSection = document.getElementById("forecast");
-        // empty today section first
-        forecastSection.innerHTML = "";
-        for (var i = 0; i < data.list.length; i++){
-            var dateHour = data.list[i].dt_txt;
-            var midday = dateHour.includes("12");
-            // retrieving weather icon ID + build icon URL
-            var iconId = data.list[i].weather[0].icon;
-            var iconUrl =  "https://openweathermap.org/img/wn/" + iconId + ".png"
-            if (midday){
-                var year = dateHour.slice(0,4);
-                var month = dateHour.slice(5,7);
-                var day = dateHour.slice(8,10);
-                var dateObj = new Date(year, month, day);
-                var date = dayjs(dateObj).format("DD/MM/YYYY");
-                var colDiv = document.createElement("div");
-                colDiv.setAttribute("class", "col");
-                forecastSection.appendChild(colDiv);
-                var cardDiv = document.createElement("div");
-                cardDiv.setAttribute("class", "card");
-                colDiv.appendChild(cardDiv);
-                var cardBody = document.createElement("div");
-                cardBody.setAttribute("class", "card-body");
-                cardDiv.append(cardBody);
-                var cardTitle = document.createElement("h6");
-                cardTitle.setAttribute("class", "card-title");
-                cardTitle.textContent = date;
-                cardBody.appendChild(cardTitle);
-                var iconImg = document.createElement("img");
-                iconImg.setAttribute("src", iconUrl);
-                iconImg.setAttribute("alt", "weather-icon");
-                cardBody.appendChild(iconImg)
-                var temp = (data.list[i].main.temp - 273.15).toFixed(2);
-                var tempEl = document.createElement("p");
-                tempEl.textContent = `Temp: ${temp}°C`;
-                cardBody.appendChild(tempEl);
-                var wind = data.list[i].wind.speed;
-                var windEl = document.createElement("p");
-                windEl.textContent = `Wind: ${wind} KPH`;
-                cardBody.appendChild(windEl);
-                var humidity = data.list[i].main.humidity;
-                var humidityEl = document.createElement("p");
-                humidityEl.textContent = `Humidity: ${humidity}%`;
-                cardBody.appendChild(humidityEl);
-            }
-        }
-
-});
-}
 
 
-// Using the OpenWeatherMap APIs, how could we retrieve geographical coordinates given a city name? 
-// Geocoding API
+// Retrieve geographical coordinates given a city name using Geocoding API
 function fetchCoord(cityInput) {
     var geoUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityInput + "&limit=5&appid=" + apiKey;
 
@@ -148,21 +118,11 @@ function fetchCoord(cityInput) {
         return response.json();
     })
     .then(function (data){
-        // console.log(data)
-        // retrieving city name
-        var cityNameGeo = data[0].name;
-        // console.log(cityNameGeo);
-
         // retrieving coord
         var cityLat = data[0].lat;
         var cityLon = data[0].lon;
         var coordUrlSection = "lat=" + cityLat + "&lon=" + cityLon
-        // console.log(cityLat);
-        // console.log(cityLon);
-        // console.log(coordUrlSection);
-
-        fetchForecastToday(coordUrlSection);
-        fetchForecastFiveDays (coordUrlSection);
+        fetchWeatherForecast(coordUrlSection);
     }); 
 }
 
@@ -174,9 +134,9 @@ searchBtn.addEventListener("click", function(e){
     var cityInput = document.getElementById("search-input").value.trim();
     e.preventDefault();
     console.log(cityInput);
-    // fetchCoord(cityInput);
+    fetchCoord(cityInput);
     saveToStorage(cityInput);
-    renderSearch();
+    renderSearchButton();
 })
 
 
@@ -187,7 +147,7 @@ function saveToStorage (cityInputValue) {
 }
 
 // function render search input values
-function renderSearch () {
+function renderSearchButton () {
     var savedCitySearch = localStorage.getItem("searchInput");
     console.log(savedCitySearch);
     var history = document.getElementById("history");
