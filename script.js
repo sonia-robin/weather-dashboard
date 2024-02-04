@@ -2,13 +2,10 @@ var apiKey = "f2d3f1b582a7074aba258738949ac0ae";
 var lat = 51.5073219;
 var lon = -0.1276474;
 
-// function to fetch and display current forecast data
+// function to fetch and display forecast data
 function fetchWeatherForecast (coordUrlSection){
-
 var apiCall = "http://api.openweathermap.org/data/2.5/forecast?" + coordUrlSection + "&appid=" + apiKey;
 var currentDate = dayjs().format("DD/MM/YYYY");
-
-// console.log(apiCall);
 
 fetch (apiCall)
 .then(function (response){
@@ -20,14 +17,11 @@ fetch (apiCall)
     todaySection.innerHTML = "";
     // retrieving city name
     var cityName = data.city.name;
-
     // retrieving date today
     var date = data.list[0].dt_txt;
-    
     // retrieving weather icon ID + build icon URL
     var iconId = data.list[0].weather[0].icon;
-    var iconUrl =  "https://openweathermap.org/img/wn/" + iconId + ".png"
-    
+    var iconUrl =  "https://openweathermap.org/img/wn/" + iconId + ".png" 
     // display city, date, icon in today section
     document.getElementById("today").style.border = "1px solid black";
     document.getElementById("today").style.padding = "10px";
@@ -39,27 +33,24 @@ fetch (apiCall)
     headerToday.textContent = `${cityName} (${currentDate})`;
     todaySection.appendChild(headerToday);
     headerToday.appendChild(iconImg);
-
     // retrieve and display temp converted do Celsius, rounded to 2 decimals
     var temp = (data.list[0].main.temp - 273.15).toFixed(2);
     var tempEl = document.createElement("p");
     tempEl.textContent = `Temp: ${temp}°C`;
-    todaySection.appendChild(tempEl);
-   
+    todaySection.appendChild(tempEl); 
     // retrieve and display wind
     var wind = data.list[0].wind.speed;
     var windEl = document.createElement("p");
     windEl.textContent = `Wind: ${wind} KPH`;
-    todaySection.appendChild(windEl);
-    
+    todaySection.appendChild(windEl);    
     // retrieve and display humidity
     var humidity = data.list[0].main.humidity;
     var humidityEl = document.createElement("p");
     humidityEl.textContent = `Humidity: ${humidity}%`;
     todaySection.appendChild(humidityEl);
-
+    // forecast section
     var forecastSection = document.getElementById("forecast");
-    // empty today section first
+    // empty section first
     forecastSection.innerHTML = "";
     for (var i = 0; i < data.list.length; i++){
         var dateHour = data.list[i].dt_txt;
@@ -67,6 +58,7 @@ fetch (apiCall)
         // retrieving weather icon ID + build icon URL
         var iconId = data.list[i].weather[0].icon;
         var iconUrl =  "https://openweathermap.org/img/wn/" + iconId + ".png"
+        // render cards only for midday
         if (midday){
             var year = dateHour.slice(0,4);
             var month = dateHour.slice(5,7);
@@ -108,8 +100,7 @@ fetch (apiCall)
 });
 }
 
-
-// Retrieve geographical coordinates given a city name using Geocoding API
+// Retrieve geographical coordinates given a city name using Geocoding API, call fetchWeatherForecast
 function fetchCoord(cityInput) {
     var geoUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityInput + "&limit=5&appid=" + apiKey;
 
@@ -118,7 +109,6 @@ function fetchCoord(cityInput) {
         return response.json();
     })
     .then(function (data){
-        // retrieving coord
         var cityLat = data[0].lat;
         var cityLon = data[0].lon;
         var coordUrlSection = "lat=" + cityLat + "&lon=" + cityLon
@@ -126,34 +116,33 @@ function fetchCoord(cityInput) {
     }); 
 }
 
-
-
 // add event listener to search button
 var searchBtn = document.getElementById("search-button");
 searchBtn.addEventListener("click", function(e){
     var cityInput = document.getElementById("search-input").value.trim();
     e.preventDefault();
-    console.log(cityInput);
     fetchCoord(cityInput);
     saveToStorage(cityInput);
-    renderSearchButton();
+    renderSearchHistory();
 })
-
 
 // function save to local storage
 function saveToStorage (cityInputValue) {
-    // var cityInput = document.getElementById("search-input").value.trim();
     localStorage.setItem("searchInput", cityInputValue);
 }
 
-// function render search input values
-function renderSearchButton () {
+// function render search hisotry buttons and results
+function renderSearchHistory () {
     var savedCitySearch = localStorage.getItem("searchInput");
-    console.log(savedCitySearch);
     var history = document.getElementById("history");
     var historyButton = document.createElement("button");
     historyButton.setAttribute("type", "button");
     historyButton.setAttribute("class", "btn btn-primary history-btn");
     historyButton.innerHTML = savedCitySearch;
     history.prepend(historyButton);
+    historyButton.addEventListener("click", function(e){
+        var cityInput = historyButton.innerHTML;
+        e.preventDefault();
+        fetchCoord(cityInput);
+    })
 }
