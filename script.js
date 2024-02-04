@@ -61,7 +61,7 @@ fetch (apiCall)
         // render cards only for midday
         if (midday){
             var year = dateHour.slice(0,4);
-            var month = dateHour.slice(5,7);
+            var month = dateHour.slice(5,7)-1; //daysjs indexes months starting from 0
             var day = dateHour.slice(8,10);
             var dateObj = new Date(year, month, day);
             var date = dayjs(dateObj).format("DD/MM/YYYY");
@@ -95,8 +95,7 @@ fetch (apiCall)
             humidityEl.textContent = `Humidity: ${humidity}%`;
             cardBody.appendChild(humidityEl);
         }
-    }
-  
+    }  
 });
 }
 
