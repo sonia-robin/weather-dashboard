@@ -1,7 +1,13 @@
+/* Header */
+.weather-header {
+    background-image: linear-gradient(to right, rgb(38, 113, 252), rgb(20, 20, 65));
+}
+
+/* Search form */
 .input-group {
     display: flex;
     flex-direction: column;
-  }
+}
   
 .input-group input.weather-search {
 width: 100%;
@@ -18,13 +24,16 @@ margin-top: 10px;
 .hr {
 margin-top: 10px;
 }
-  
-/* #today {
-    border: 1px solid black;
-} */
-  
+
+/* Search history section */
 .history-btn {
     background-color: grey !important;
     border: none !important;
 }  
 
+/* 5-day forecast cards */
+.bootsrap-card {
+    color: white !important;
+    background-color: #232B6A !important;
+    border: none !important;
+}
