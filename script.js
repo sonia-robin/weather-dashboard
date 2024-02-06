@@ -4,7 +4,7 @@ var lon = -0.1276474;
 
 // function to fetch and display forecast data
 function fetchWeatherForecast (coordUrlSection){
-var apiCall = "http://api.openweathermap.org/data/2.5/forecast?" + coordUrlSection + "&appid=" + apiKey;
+var apiCall = "https://api.openweathermap.org/data/2.5/forecast?" + coordUrlSection + "&appid=" + apiKey;
 var currentDate = dayjs().format("DD/MM/YYYY");
 
 fetch (apiCall)
