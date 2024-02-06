@@ -101,7 +101,7 @@ fetch (apiCall)
 
 // Retrieve geographical coordinates given a city name using Geocoding API, call fetchWeatherForecast
 function fetchCoord(cityInput) {
-    var geoUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityInput + "&limit=5&appid=" + apiKey;
+    var geoUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityInput + "&limit=5&appid=" + apiKey;
 
     fetch (geoUrl)
     .then(function (response){
