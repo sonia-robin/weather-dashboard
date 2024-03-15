@@ -10,7 +10,7 @@ The weather forecast will appear.
 
 Click on the previous searches displayed under the search button for quick access.
 
-![screenshot-weather-dashboard](./images/screenshot-weather-dashboard.png)
+![screenshot-weather-dashboard](./assests/images/screenshot-weather-dashboard.png)
 
 ## Link to deployed application
 https://sonia-robin.github.io/weather-dashboard/
